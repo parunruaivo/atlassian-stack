@@ -1,0 +1,70 @@
+nginx:
+  image: parunruaivo/nginx
+  restart: always
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - jira
+    - confluence
+    - crowd
+    - bamboo
+
+jira:
+  image: parunruaivo/atlassian-jira
+  restart: always
+  links:
+    - db
+  volumes_from:
+    - atlassianstore
+  expose:
+    - "8080"
+
+confluence:
+  image: parunruaivo/atlassian-confluence
+  restart: always
+  links:
+    - db
+  volumes_from:
+    - atlassianstore
+  expose:
+    - "8085"
+
+bamboo:
+  image: parunruaivo/atlassian-bamboo
+  restart: always
+  links:
+    - db
+  volumes_from:
+    - atlassianstore
+  expose:
+    - "8090"
+
+crowd:
+  image: parunruaivo/atlassian-crowd
+  restart: always
+  links:
+    - db
+  volumes_from:
+    - atlassianstore
+  expose:
+    - "8095"
+
+db:
+  image: parunruaivo/postgres
+  restart: always
+  volumes_from:
+    - dbstore
+
+dbstore:
+  image: parunruaivo/postgres
+  volumes:
+    - /var/lib/postgresql
+  command: /bin/true
+
+atlassianstore:
+  image: parunruaivo/postgres
+  volumes:
+    - /var/lib/postgresql
+  command: /bin/true
+
