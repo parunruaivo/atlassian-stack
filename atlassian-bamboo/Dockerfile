@@ -18,8 +18,7 @@ RUN mkdir -p                   "${BAMBOO_HOME}" \
     && mkdir -p                "${BAMBOO_INSTALL}"
 
 RUN curl -Ls                   "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz" | tar -xz --directory "${BAMBOO_INSTALL}" --strip-components=1 --no-same-owner \
-    && sed --in-place          "s/java version/openjdk version/g" "${BAMBOO_INSTALL}/bin/check-java.sh" \
-    && echo -e                 "\nbamboo.home=BAMBOO_HOME" >> "${BAMBOO_INSTALL}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
+    && echo -e                 "\nbamboo.home=BAMBOO_HOME" > "${BAMBOO_INSTALL}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
 
 USER bamboo:bamboo
 
