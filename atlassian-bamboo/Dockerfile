@@ -15,7 +15,7 @@ RUN set -x \
 RUN mkdir -p                   "${BAMBOO_HOME}" \
     && chmod -R 700            "${BAMBOO_HOME}" \
     && chown bamboo:bamboo     "${BAMBOO_HOME}" \
-    && mkdir -p                "${BAMBOO_INSTALL}" \
+    && mkdir -p                "${BAMBOO_INSTALL}"
 
 RUN curl -Ls                   "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz" | tar -xz --directory "${BAMBOO_INSTALL}" --strip-components=1 --no-same-owner \
     && sed --in-place          "s/java version/openjdk version/g" "${BAMBOO_INSTALL}/bin/check-java.sh" \
