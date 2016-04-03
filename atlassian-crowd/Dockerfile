@@ -28,4 +28,4 @@ VOLUME ["/var/atlassian/crowd", "/opt/atlassian/crowd"]
 
 WORKDIR /var/atlassian/crowd
 
-CMD ["/opt/atlassian/crowd/bin/catalina.sh", "run"]
+CMD ["/opt/atlassian/crowd/apache-tomcat/bin/catalina.sh", "run"]
