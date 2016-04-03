@@ -14,9 +14,10 @@ ARG uid=1000
 ARG gid=1000
 
 RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$CROWD_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    && useradd -u ${uid} -g ${gid} ${user}
 
-RUN mkdir -p "${CROWD_INSTALL}"
+RUN mkdir -p    "${CROWD_HOME}" \
+    && mkdir -p "${CROWD_INSTALL}"
 
 RUN curl -Ls      "https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-${CROWD_VERSION}.tar.gz" | tar -xz --directory "${CROWD_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e    "\ncrowd.home=CROWD_HOME" >> "${CROWD_INSTALL}/crowd-webapp/WEB-INF/classes/crowd-init.properties"

@@ -14,9 +14,10 @@ ARG uid=1000
 ARG gid=1000
 
 RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$CONF_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    && useradd -u ${uid} -g ${gid} ${user}
 
-RUN mkdir -p  "${CONF_INSTALL}"
+RUN mkdir -p     "${CONF_HOME}" \
+    && mkdir -p  "${CONF_INSTALL}"
 
 RUN curl -Ls                           "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONF_VERSION}.tar.gz" | tar -xz --directory "${CONF_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e                         "\nconfluence.home=$CONF_HOME" >> "${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties" \

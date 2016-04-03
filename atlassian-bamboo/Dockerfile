@@ -14,10 +14,10 @@ ARG uid=1000
 ARG gid=1000
 
 RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$BAMBOO_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    && useradd -u ${uid} -g ${gid} ${user}
 
-RUN mkdir -p "${BAMBOO_INSTALL}"
-
+RUN mkdir -p    "${BAMBOO_HOME}" \
+    && mkdir -p "${BAMBOO_INSTALL}"
 RUN curl -Ls                   "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz" | tar -xz --directory "${BAMBOO_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e                 "\nbamboo.home=BAMBOO_HOME" > "${BAMBOO_INSTALL}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
 

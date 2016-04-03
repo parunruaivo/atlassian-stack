@@ -14,9 +14,10 @@ ARG uid=1000
 ARG gid=1000
 
 RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$JIRA_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    && useradd -u ${uid} -g ${gid} ${user}
 
-RUN mkdir -p "${JIRA_INSTALL}"
+RUN mkdir -p    "${JIRA_HOME}" \
+    && mkdir -p "${JIRA_INSTALL}"
 
 RUN curl -Ls                   "https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-core-${JIRA_VERSION}.tar.gz" | tar -xz --directory "${JIRA_INSTALL}" --strip-components=1 --no-same-owner \
     && touch -d "@0"           "/opt/atlassian/jira/conf/server.xml" \
