@@ -2,27 +2,30 @@ FROM java:8
 
 MAINTAINER "Parun Rua, Ivo"
 
+RUN apt-get update && apt-get install -y wget git curl zip && rm -rf /var/lib/apt/lists/*
+
 ENV CROWD_HOME /var/atlassian/crowd
 ENV CROWD_INSTALL /opt/atlassian/crowd
 ENV CROWD_VERSION 2.8.4
 
-RUN groupadd -r crowd && useradd -r -g crowd crowd
+ARG user=crowd
+ARG group=crowd
+ARG uid=1000
+ARG gid=1000
 
-RUN set -x \
-    && apt-get update --quiet \
-    && apt-get install --quiet --yes --no-install-recommends libtcnative-1 xmlstarlet
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d "$CROWD_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
-RUN mkdir -p                   "${CROWD_HOME}" \
-    && chmod -R 700            "${CROWD_HOME}" \
-    && chown crowd:crowd       "${CROWD_HOME}" \
-    && mkdir -p                "${CROWD_INSTALL}"
+RUN mkdir -p "${CROWD_INSTALL}"
 
-RUN curl -Ls                   "https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-${CROWD_VERSION}.tar.gz" | tar -xz --directory "${CROWD_INSTALL}" --strip-components=1 --no-same-owner \
-    && echo -e                 "\ncrowd.home=CROWD_HOME" >> "${CROWD_INSTALL}/crowd-webapp/WEB-INF/classes/crowd-init.properties"
+RUN curl -Ls      "https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-${CROWD_VERSION}.tar.gz" | tar -xz --directory "${CROWD_INSTALL}" --strip-components=1 --no-same-owner \
+    && echo -e    "\ncrowd.home=CROWD_HOME" >> "${CROWD_INSTALL}/crowd-webapp/WEB-INF/classes/crowd-init.properties"
 
-USER crowd:crowd
+RUN chown -R ${user} "${CROWD_HOME}" "${CROWD_INSTALL}"
 
-EXPOSE 8085
+USER ${user}
+
+EXPOSE 8095
 
 VOLUME ["/var/atlassian/crowd", "/opt/atlassian/crowd"]
 

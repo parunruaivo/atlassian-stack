@@ -3,7 +3,6 @@ version: '2'
 services:
   nginx:
     image: nginx:latest
-    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -12,57 +11,59 @@ services:
       - confluence
       - crowd
       - bamboo
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
 
   jira:
     build: ./atlassian-jira
-    restart: always
     links:
       - db
     volumes:
-      - atlassian-volume:/var/atlassian/jira
+      - atlassian-jira-volume:/var/atlassian/jira
     expose:
       - "8080"
 
   confluence:
     build: ./atlassian-confluence
-    restart: always
     links:
       - db
     volumes:
-      - atlassian-volume:/var/atlassian/confluence
+      - atlassian-confluence-volume:/var/atlassian/confluence
     expose:
       - "8085"
 
   bamboo:
     build: ./atlassian-bamboo
-    restart: always
     links:
       - db
     volumes:
-      - atlassian-volume:/var/atlassian/bamboo
+      - atlassian-bamboo-volume:/var/atlassian/bamboo
     expose:
       - "8090"
 
   crowd:
     build: ./atlassian-crowd
-    restart: always
     links:
       - db
     volumes:
-      - atlassian-volume:/var/atlassian/crowd
+      - atlassian-crowd-volume:/var/atlassian/crowd
     expose:
       - "8095"
 
   db:
     build: ./postgres
-    restart: always
     volumes:
       - postgres-volume:/var/lib/postgresql
 
 volumes:
-  atlassian-volume:
+  atlassian-jira-volume:
+    driver: local
+
+  atlassian-bamboo-volume:
+    driver: local
+
+  atlassian-confluence-volume:
+    driver: local
+
+  atlassian-crowd-volume:
     driver: local
 
   postgres-volume:

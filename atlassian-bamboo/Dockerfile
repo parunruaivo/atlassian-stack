@@ -2,27 +2,30 @@ FROM java:8
 
 MAINTAINER "Parun Rua, Ivo"
 
+RUN apt-get update && apt-get install -y wget git curl zip && rm -rf /var/lib/apt/lists/*
+
 ENV BAMBOO_HOME     /var/atlassian/bamboo
 ENV BAMBOO_INSTALL  /opt/atlassian/bamboo
 ENV BAMBOO_VERSION  5.9.3
 
-RUN groupadd -r bamboo && useradd -r -g bamboo bamboo
+ARG user=bamboo
+ARG group=bamboo
+ARG uid=1000
+ARG gid=1000
 
-RUN set -x \
-    && apt-get update --quiet \
-    && apt-get install --quiet --yes --no-install-recommends libtcnative-1 xmlstarlet
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d "$BAMBOO_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
-RUN mkdir -p                   "${BAMBOO_HOME}" \
-    && chmod -R 700            "${BAMBOO_HOME}" \
-    && chown bamboo:bamboo     "${BAMBOO_HOME}" \
-    && mkdir -p                "${BAMBOO_INSTALL}"
+RUN mkdir -p "${BAMBOO_INSTALL}"
 
 RUN curl -Ls                   "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz" | tar -xz --directory "${BAMBOO_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e                 "\nbamboo.home=BAMBOO_HOME" > "${BAMBOO_INSTALL}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
 
-USER bamboo:bamboo
+RUN chown -R  ${user} "${BAMBOO_HOME}" "${BAMBOO_INSTALL}"
 
-EXPOSE 8095
+USER ${user}
+
+EXPOSE 8090
 
 VOLUME ["/var/atlassian/bamboo", "/opt/atlassian/bamboo"]
 

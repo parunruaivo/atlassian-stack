@@ -2,20 +2,21 @@ FROM java:8
 
 MAINTAINER "Parun Rua, Ivo"
 
+RUN apt-get update && apt-get install -y wget git curl zip && rm -rf /var/lib/apt/lists/*
+
 ENV CONF_HOME     /var/atlassian/confluence
 ENV CONF_INSTALL  /opt/atlassian/confluence
 ENV CONF_VERSION  5.9.6
 
-RUN groupadd -r confluence && useradd -r -g confluence confluence
+ARG user=confluence
+ARG group=confluence
+ARG uid=1000
+ARG gid=1000
 
-RUN set -x \
-    && apt-get update --quiet \
-    && apt-get install --quiet --yes --no-install-recommends libtcnative-1 xmlstarlet
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d "$CONF_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
-RUN mkdir -p                           "${CONF_HOME}" \
-    && chmod -R 700                    "${CONF_HOME}" \
-    && chown confluence:confluence     "${CONF_HOME}" \
-    && mkdir -p                        "${CONF_INSTALL}"
+RUN mkdir -p  "${CONF_INSTALL}"
 
 RUN curl -Ls                           "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONF_VERSION}.tar.gz" | tar -xz --directory "${CONF_INSTALL}" --strip-components=1 --no-same-owner \
     && echo -e                         "\nconfluence.home=$CONF_HOME" >> "${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties" \
@@ -31,9 +32,11 @@ RUN curl -Ls                           "http://www.atlassian.com/software/conflu
                                        "${CONF_INSTALL}/conf/server.xml" \
     && touch -d "@0"                   "/opt/atlassian/confluence/conf/server.xml"
 
-USER confluence:confluence
+RUN chown -R ${user} "${CONF_HOME}" "${CONF_INSTALL}"
 
-EXPOSE 8090
+USER ${user}
+
+EXPOSE 8085
 
 VOLUME ["/var/atlassian/confluence"]
 
