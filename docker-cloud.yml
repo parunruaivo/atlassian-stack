@@ -28,7 +28,7 @@ confluence:
   volumes_from:
     - atlassianstore
   expose:
-    - "8085"
+    - "8090"
 
 bamboo:
   image: parunruaivo/atlassian-bamboo
@@ -38,7 +38,7 @@ bamboo:
   volumes_from:
     - atlassianstore
   expose:
-    - "8090"
+    - "8085"
 
 crowd:
   image: parunruaivo/atlassian-crowd

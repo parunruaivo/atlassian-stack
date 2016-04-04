@@ -19,15 +19,18 @@ RUN groupadd -g ${gid} ${group} \
 RUN mkdir -p     "${CONF_HOME}" \
     && mkdir -p  "${CONF_INSTALL}"
 
-RUN curl -Ls    "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONF_VERSION}.tar.gz" | tar -xz --directory "${CONF_INSTALL}" --strip-components=1 --no-same-owner \
-    && echo -e  "\nconfluence.home=$CONF_HOME" >> "${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties" \
+RUN curl -Ls                   "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONF_VERSION}.tar.gz" | tar xzf - --strip=1 -C "${CONF_INSTALL}" \
+    && echo -e                 "\nconfluence.home=$CONF_HOME" > "${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties"
 
+RUN sed -i 's/-Xms512m/-Xms128m/' "${CONF_INSTALL}/bin/setenv.sh" \
+    && sed -i 's/-Xmx2048m/-Xmx512m/' "${CONF_INSTALL}/bin/setenv.sh" \
+    && sed -i 's/_%T//' "${CONF_INSTALL}/bin/setenv.sh"
 
 RUN chown -R ${user} "${CONF_HOME}" "${CONF_INSTALL}"
 
 USER ${user}
 
-EXPOSE 8085
+EXPOSE 8090
 
 VOLUME ["/var/atlassian/confluence"]
 

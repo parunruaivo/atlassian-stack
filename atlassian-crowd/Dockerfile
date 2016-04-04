@@ -19,8 +19,8 @@ RUN groupadd -g ${gid} ${group} \
 RUN mkdir -p    "${CROWD_HOME}" \
     && mkdir -p "${CROWD_INSTALL}"
 
-RUN curl -Ls      "https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-${CROWD_VERSION}.tar.gz" | tar -xz --directory "${CROWD_INSTALL}" --strip-components=1 --no-same-owner \
-    && echo -e    "\ncrowd.home=CROWD_HOME" >> "${CROWD_INSTALL}/crowd-webapp/WEB-INF/classes/crowd-init.properties"
+RUN curl -Ls            "https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-${CROWD_VERSION}.tar.gz" | tar xzf - --strip=1 -C "${CROWD_INSTALL}" \
+    && echo -e          "\ncrowd.home=CROWD_HOME" >> "${CROWD_INSTALL}/crowd-webapp/WEB-INF/classes/crowd-init.properties"
 
 RUN chown -R ${user} "${CROWD_HOME}" "${CROWD_INSTALL}"
 

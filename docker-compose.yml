@@ -2,7 +2,7 @@ version: '2'
 
 services:
   nginx:
-    image: nginx:latest
+    build: ./nginx
     ports:
       - "80:80"
       - "443:443"
@@ -20,6 +20,10 @@ services:
       - atlassian-jira-volume:/var/atlassian/jira
     expose:
       - "8080"
+    environment:
+      - JIRA_JDBC_USER = jira
+      - JIRA_JDBC_PASSWORD = jira
+      - JIRA_JDBC_URL = jdbc:postgresql://db:5432/jira
 
   confluence:
     build: ./atlassian-confluence
@@ -28,7 +32,7 @@ services:
     volumes:
       - atlassian-confluence-volume:/var/atlassian/confluence
     expose:
-      - "8085"
+      - "8090"
 
   bamboo:
     build: ./atlassian-bamboo
@@ -37,7 +41,7 @@ services:
     volumes:
       - atlassian-bamboo-volume:/var/atlassian/bamboo
     expose:
-      - "8090"
+      - "8085"
 
   crowd:
     build: ./atlassian-crowd
