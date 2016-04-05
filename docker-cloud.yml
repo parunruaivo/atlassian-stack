@@ -51,7 +51,7 @@ crowd:
     - "8095"
 
 db:
-  image: parunruaivo/postgres
+  image: parunruaivo/atlassian-database
   restart: always
   volumes_from:
     - dbstore
