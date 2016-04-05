@@ -53,7 +53,7 @@ services:
       - "8095"
 
   db:
-    build: ./postgres
+    build: ./atlassian-database
     volumes:
       - postgres-volume:/var/lib/postgresql
 

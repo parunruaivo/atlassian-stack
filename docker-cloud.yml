@@ -57,13 +57,13 @@ db:
     - dbstore
 
 dbstore:
-  image: parunruaivo/postgres
+  image: parunruaivo/atlassian-database
   volumes:
     - /var/lib/postgresql
   command: /bin/true
 
 atlassianstore:
-  image: parunruaivo/postgres
+  image: parunruaivo/atlassian-database
   volumes:
     - /var/lib/postgresql
   command: /bin/true
