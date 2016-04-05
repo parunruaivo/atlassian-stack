@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
         vb.name = "{{ name }}"
         vb.gui = false
         vb.memory = "2048"
-        vb.cpus = 4
+        vb.cpus = 2
     end
 
     config.vm.provision "shell", inline: $script, privileged: true

@@ -25,10 +25,10 @@ RUN chown -R  ${user} "${BAMBOO_HOME}" "${BAMBOO_INSTALL}"
 
 USER ${user}
 
-EXPOSE 8090
+EXPOSE 8085
 
 VOLUME ["/var/atlassian/bamboo", "/opt/atlassian/bamboo"]
 
 WORKDIR /var/atlassian/bamboo
 
-CMD ["/opt/atlassian/bamboo/bin/catalina.sh", "run"]
+CMD ["/opt/atlassian/bamboo/bin/start-bamboo.sh", "-fg"]
