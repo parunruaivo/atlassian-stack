@@ -22,10 +22,6 @@ RUN mkdir -p     "${CONF_HOME}" \
 RUN curl -Ls                   "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONF_VERSION}.tar.gz" | tar xzf - --strip=1 -C "${CONF_INSTALL}" \
     && echo -e                 "\nconfluence.home=$CONF_HOME" > "${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties"
 
-RUN sed -i 's/-Xms1024m/-Xms384m/' "${CONF_INSTALL}/bin/setenv.sh" \
-    && sed -i 's/-Xmx1024m/-Xmx640m/' "${CONF_INSTALL}/bin/setenv.sh" \
-    && sed -i 's/_%T//' "${CONF_INSTALL}/bin/setenv.sh"
-
 RUN chown -R ${user} "${CONF_HOME}" "${CONF_INSTALL}"
 
 USER ${user}
